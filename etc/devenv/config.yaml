@@ -1,0 +1,11 @@
+devenv:
+  command-aliases:
+    h: help
+    ap: apply
+    du: dump
+    ls: list
+    ed: edit
+    e: edit
+    st: status
+    desc: describe
+    de: describe

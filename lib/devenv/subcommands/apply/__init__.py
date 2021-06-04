@@ -2,7 +2,7 @@ import logging
 import os
 import argparse
 from devenv.subcommands.base_command import Command
-import devenv.configuration
+import devenv.utils
 import devenv.generators
 
 logger = logging.getLogger('devenv.subcommands.apply')
@@ -16,17 +16,17 @@ def add_subparser(subparsers):
         '--export var1=var,var2 where var1 is set to "var", and var2 is set to\n'
         'the value of var2 in host environment.', default=None)
     apply_parser.add_argument('name', type=str, help='Name of configuration to be applied.')
-    devenv.configuration.add_default_parser_options(apply_parser)
+    devenv.utils.add_default_parser_options(apply_parser)
 
 class Apply(Command):
 
-    def __init__(self, args, configs):
-        super().__init__(args, configs)
-        devenv.configuration.set_logging_attrs(args, logger)
+    def __init__(self, args, config):
+        super().__init__(args, config)
+        devenv.utils.set_logging_attrs(args, logger)
 
     def run(self):
         logging.info(f'Creating commands for environment {self.args.name}')
-        cmd = devenv.generators.generate_script(self.args, self.configs[self.args.name])
+        cmd = devenv.generators.generate_script(self.args, self.config['environments'][self.args.name])
 
         if self.args.debug:
             print(cmd)

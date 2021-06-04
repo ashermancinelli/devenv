@@ -1,5 +1,5 @@
 import logging
-import devenv.configuration
+import devenv.utils
 from devenv.subcommands.base_command import Command
 
 logger = logging.getLogger('devenv.subcommands.edit')
@@ -8,13 +8,20 @@ list_parser = None
 
 def add_subparser(subparsers):
     list_parser = subparsers.add_parser("list")
-    devenv.configuration.add_default_parser_options(list_parser)
+    devenv.utils.add_default_parser_options(list_parser)
 
 class List(Command):
-    def __init__(self, args, configs):
-        super().__init__(args, configs)
-        devenv.configuration.set_logging_attrs(args, logger)
+    def __init__(self, args, config):
+        super().__init__(args, config)
+        devenv.utils.set_logging_attrs(args, logger)
 
     def run(self):
-        for cfg in self.configs.keys():
-            print(cfg)
+        print('Environments:')
+        for env in self.config['environments'].keys():
+            print('  ', env)
+
+        print()
+        print('Aliases:')
+        for alias in self.config['aliases'].keys():
+            print('  ', alias, ' -> ', self.config['aliases'][alias])
+

@@ -3,7 +3,7 @@ import logging
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 from devenv.subcommands.base_command import Command
-import devenv.configuration
+import devenv.utils
 
 logger = logging.getLogger('devenv.subcommands.describe')
 
@@ -11,14 +11,20 @@ describe_parser = None
 
 def add_subparser(subparsers):
     describe_parser = subparsers.add_parser("describe")
-    describe_parser.add_argument('name', type=str, help='Name of configuration to be applied.')
-    devenv.configuration.add_default_parser_options(describe_parser)
+    describe_parser.add_argument('name', type=str, nargs='?', default=None,
+            help='Name of environment to be described. If not supplied,'
+            ' the entire configuration will be described.')
+    devenv.utils.add_default_parser_options(describe_parser)
 
 class Describe(Command):
-    def __init__(self, args, configs):
-        super().__init__(args, configs)
-        devenv.configuration.set_logging_attrs(args, logger)
+    def __init__(self, args, config):
+        super().__init__(args, config)
+        devenv.utils.set_logging_attrs(self.args, logger)
 
     def run(self):
-        logger.info('Dumping configuration for environment "{self.args.name}"')
-        pp.pprint(self.configs[self.args.name])
+        if not self.args.name is None:
+            logger.info('Dumping environment "{self.args.name}"')
+            pp.pprint(self.config['environments'][self.args.name])
+        else:
+            logger.info('Dumping all environments')
+            pp.pprint(self.config)

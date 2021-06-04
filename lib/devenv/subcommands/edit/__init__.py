@@ -2,7 +2,7 @@ import os
 import logging
 import shutil
 from devenv.subcommands.base_command import Command
-import devenv.configuration
+import devenv.utils
 
 logger = logging.getLogger('devenv.subcommands.edit')
 
@@ -11,13 +11,13 @@ edit_parser = None
 
 def add_subparser(subparsers):
     edit_parser = subparsers.add_parser("edit")
-    devenv.configuration.add_default_parser_options(edit_parser)
+    devenv.utils.add_default_parser_options(edit_parser)
 
 
 class Edit(Command):
     def __init__(self, args, configs):
         super().__init__(args, configs)
-        devenv.configuration.set_logging_attrs(args, logger)
+        devenv.utils.set_logging_attrs(args, logger)
 
     def get_default_editor(self) -> str:
         logger.debug('Searching for default editor')
