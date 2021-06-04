@@ -1,6 +1,7 @@
 import logging
 import devenv
 import devenv.subcommands.dump
+import devenv.subcommands.describe
 import devenv.subcommands.status
 import devenv.subcommands.version
 import devenv.subcommands.edit
@@ -16,6 +17,7 @@ def add_subparsers(subparsers) -> None:
     devenv.subcommands.apply.add_subparser(subparsers)
     devenv.subcommands.version.add_subparser(subparsers)
     devenv.subcommands.status.add_subparser(subparsers)
+    devenv.subcommands.describe.add_subparser(subparsers)
 
 def handle_subcommand(args, configs) -> None:
 
@@ -26,6 +28,7 @@ def handle_subcommand(args, configs) -> None:
             'edit': devenv.subcommands.edit.Edit,
             'version': devenv.subcommands.version.Version,
             'status': devenv.subcommands.status.Status,
+            'describe': devenv.subcommands.describe.Describe,
             }
 
     devenv.configuration.set_logging_attrs(args, logger)
