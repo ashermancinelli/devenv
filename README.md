@@ -5,24 +5,75 @@ To get started, just add ./bin to your PATH.
 `devenv` has a few subcommands:
 
 ```console
-$ ./bin/devenv -h
-usage: devenv [-h] [--config-file CONFIG_FILE] [--full-help] [--verbose]
-              [--vverbose] [--debug]
-              {dump,list,apply} ...
+$ devenv --help
+usage: devenv [--config-file CONFIG_FILE] [--help] [--verbose] [--debug]
+              {edit,dump,list,apply} ...
 
 Configure development environment based on predetermined configurations
 
 positional arguments:
-  {dump,list,apply}     sub-command help
+  {edit,dump,list,apply}
+                        sub-command --help
+
+optional arguments:
+  --config-file CONFIG_FILE, -c CONFIG_FILE
+                        Path to configuration file. Defaults to ~/.devenv.yaml
+  --help, -h            View all program options
+  --verbose, -v         Verbose debugging information
+  --debug, -L           Extra verbose debugging information
+--------------------------------------------------------------------------------
+
+Help for subcommand 'edit'
+------------------------------
+usage: devenv edit [-h] [--verbose] [--debug]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand 'dump'
+------------------------------
+usage: devenv dump [-h] [--verbose] [--debug]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand 'list'
+------------------------------
+usage: devenv list [-h] [--verbose] [--debug]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand 'apply'
+------------------------------
+usage: devenv apply [-h] [--export EXPORT] [--verbose] [--debug] name
+
+positional arguments:
+  name                  Name of configuration to be applied.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config-file CONFIG_FILE, -c CONFIG_FILE
-                        Path to configuration file. Defaults to ~/.devenv.yaml
-  --full-help           Print extra long help information
+  --export EXPORT, -e EXPORT
+                        Environment variables to set in target environment of
+                        the form --export var1=var,var2 where var1 is set to
+                        "var", and var2 is set to the value of var2 in host
+                        environment.
   --verbose, -v         Verbose debugging information
-  --vverbose, -vv       Extra verbose debugging information
   --debug, -L           Extra verbose debugging information
+
+--------------------------------------------------------------------------------
 ```
 
 ### Configuration Format

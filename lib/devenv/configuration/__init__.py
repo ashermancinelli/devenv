@@ -67,6 +67,5 @@ def merge_config_file(configs, aliases, args) -> None:
 
 def add_default_parser_options(parser):
     parser.add_argument('--verbose', '-v', help='Verbose debugging information', action='store_true')
-    parser.add_argument('--vverbose', '-vv', help='Extra verbose debugging information', action='store_true')
     parser.add_argument('--debug', '-L', help='Extra verbose debugging information', action='store_true')
     return parser
