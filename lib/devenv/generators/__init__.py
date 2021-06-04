@@ -37,7 +37,7 @@ class BashGenerator(CommandGenerator):
                 logging.debug(f'Setting variable {key} to {value} in target '
                         'environment via variable passthrough')
 
-            configs[args.name]['commands'].insert(0, f'export {key}={value}')
+            config['commands'].insert(0, f'export {key}={value}')
 
     def add_commands(self, config) -> str:
         cmds = ''
@@ -60,8 +60,11 @@ class BashGenerator(CommandGenerator):
     def add_launch_command(self, config) -> str:
         cmds = ''
         if 'launch-command' in config.keys():
-            logging.info('Adding launch command "{config["launch-command"]}" to command string')
+            logging.info(f'Adding launch command "{config["launch-command"]}" to command string')
             cmds += '\n' + config['launch-command']
+        else:
+            cmds += '\nbash'
+
         return cmds
 
     def generate(self, config: Dict[str, str]) -> str:

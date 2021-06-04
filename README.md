@@ -103,3 +103,14 @@ would result in the following bash commands prefixing the rest of the commands:
 $ export key1=value1
 $ export key2=<whatever the value of key2 was on the host system>
 ```
+
+For example:
+
+```console
+$ export key2='value on host'
+$ ./bin/devenv apply t --export key1=value1,key2
+$ echo $key1
+value1
+$ echo $key2
+value on host
+```
