@@ -1,56 +1,16 @@
-import textwrap
+import os
+import logging
+from typing import Dict
+import devenv.configuration
 
-extra_help = textwrap.dedent('''
-Full Help Message:
--------------------------------------------------------------------------------
+logger = logging.getLogger('devenv.defaults')
 
-The configuration files must have the following form:
-
-```yaml
-# ~/.devenv.yaml
-configs:
-    config-name:
-        commands: []
-        modules: []
-        launch-command: ''
-
-aliases:
-    alias1: value1
-```
-
-The commands are built in the following order:
-
-    0. Exported variables from command line if --export flag is passed
-    1. Commands
-    2. Modules
-    3. `srun` command
-
-For example, the following config:
-```yaml
-# ~/.devenv.yaml
-configs:
-    myconfig:
-        commands:
-          - cd ~/workspace
-        modules:
-          - gcc/7.4.0
-        launch-command: 'srun -N 1 --pty bash'
-
-aliases:
-    c: myconfig
-```
-
-would invoke the following command:
-
-    $ cd ~/workspace
-    $ module load gcc/7.4.0
-    $ srun -N 1 --pty bash
-
-This development environment may be invoked either via `devenv -n myconfig`
-or `devenv -n c`.
-
--------------------------------------------------------------------------------
-''')
+def get_devenv_variables(config, args) -> Dict[str, str]:
+    devenv.configuration.set_logging_attrs(args, logger)
+    env = dict()
+    env['DEVENV_LAYERS'] = int(os.environ.get('DEVENV_LAYERS', 0)) + 1
+    env['DEVENV_ENV_NAME'] = args.name
+    return env
 
 # Default locations for config files
 config_locations = [
@@ -62,7 +22,7 @@ config_locations = [
 
 configs = {
         'default': {
-              'launch-command': '',
+              'launch-command': None,
               'modules': [],
               'commands': [],
             },
