@@ -5,14 +5,14 @@ To get started, just add ./bin to your PATH.
 `devenv` has a few subcommands:
 
 ```console
-$ devenv --help
+$ devenv help
 usage: devenv [--config-file CONFIG_FILE] [--help] [--verbose] [--debug]
-              {edit,dump,list,apply} ...
+              {help,edit,dump,list,apply,version} ...
 
 Configure development environment based on predetermined configurations
 
 positional arguments:
-  {edit,dump,list,apply}
+  {help,edit,dump,list,apply,version}
                         sub-command --help
 
 optional arguments:
@@ -21,9 +21,16 @@ optional arguments:
   --help, -h            View all program options
   --verbose, -v         Verbose debugging information
   --debug, -L           Extra verbose debugging information
+
 --------------------------------------------------------------------------------
 
-Help for subcommand 'edit'
+Help for subcommand "help"
+------------------------------
+usage: devenv help
+
+--------------------------------------------------------------------------------
+
+Help for subcommand "edit"
 ------------------------------
 usage: devenv edit [-h] [--verbose] [--debug]
 
@@ -34,7 +41,7 @@ optional arguments:
 
 --------------------------------------------------------------------------------
 
-Help for subcommand 'dump'
+Help for subcommand "dump"
 ------------------------------
 usage: devenv dump [-h] [--verbose] [--debug]
 
@@ -45,7 +52,7 @@ optional arguments:
 
 --------------------------------------------------------------------------------
 
-Help for subcommand 'list'
+Help for subcommand "list"
 ------------------------------
 usage: devenv list [-h] [--verbose] [--debug]
 
@@ -56,7 +63,7 @@ optional arguments:
 
 --------------------------------------------------------------------------------
 
-Help for subcommand 'apply'
+Help for subcommand "apply"
 ------------------------------
 usage: devenv apply [-h] [--export EXPORT] [--verbose] [--debug] name
 
@@ -72,6 +79,12 @@ optional arguments:
                         environment.
   --verbose, -v         Verbose debugging information
   --debug, -L           Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand "version"
+------------------------------
+usage: devenv version
 
 --------------------------------------------------------------------------------
 ```
