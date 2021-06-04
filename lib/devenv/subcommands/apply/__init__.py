@@ -5,6 +5,8 @@ from devenv.subcommands.base_command import Command
 import devenv.configuration
 import devenv.generators
 
+logger = logging.getLogger('devenv.subcommands.apply')
+
 apply_parser = None
 
 def add_subparser(subparsers):
@@ -20,13 +22,14 @@ class Apply(Command):
 
     def __init__(self, args, configs):
         super().__init__(args, configs)
+        devenv.configuration.set_logging_attrs(args, logger)
 
     def run(self):
-        print(f'Loading environment {self.args.name}')
+        logging.info(f'Creating commands for environment {self.args.name}')
         cmd = devenv.generators.generate_script(self.args, self.configs[self.args.name])
 
         if self.args.debug:
             print(cmd)
         else:
-            logging.info('Running command for environment {self.args.name}')
+            logger.info('Running command for environment {self.args.name}')
             os.system(cmd)

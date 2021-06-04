@@ -8,15 +8,28 @@ from typing import List
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
+logger = logging.getLogger('devenv.configuration')
+
+def set_logging_attrs(args, logger) -> None:
+    if args.verbose:
+        logger.setLevel(logging.INFO)
+
+    if args.vverbose or args.debug:
+        logger.setLevel(logging.DEBUG)
+        logger.debug('Debug output enabled')
+
+
 def apply_shorthand_commands(argv: List[str]) -> None:
     if len(argv) < 2:
         return
 
+    logging.debug(f'Applying shorthands to args "{argv}"')
     if argv[1] in devenv.defaults.command_shorthands.keys():
         argv[1] = devenv.defaults.command_shorthands[argv[1]]
 
 
 def check_config_file(args) -> None:
+    set_logging_attrs(args, logger)
     # If the config file doesn't exist, check the default locations until we find one that does
     config_file = os.path.abspath(args.config_file)
     default_loc_i = 0

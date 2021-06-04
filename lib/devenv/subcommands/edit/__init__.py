@@ -1,9 +1,13 @@
 import os
+import logging
 import shutil
 from devenv.subcommands.base_command import Command
 import devenv.configuration
 
+logger = logging.getLogger('devenv.subcommands.edit')
+
 edit_parser = None
+
 
 def add_subparser(subparsers):
     edit_parser = subparsers.add_parser("edit")
@@ -13,9 +17,10 @@ def add_subparser(subparsers):
 class Edit(Command):
     def __init__(self, args, configs):
         super().__init__(args, configs)
+        devenv.configuration.set_logging_attrs(args, logger)
 
     def get_default_editor(self) -> str:
-        logging.debug('Searching for default editor')
+        logger.debug('Searching for default editor')
         editor = None
         default_editors = [
                 os.environ.get('DEVENV_EDITOR', ''),
@@ -27,7 +32,7 @@ class Edit(Command):
                 'ed'
                 ]
         for ed in default_editors:
-            logging.debug(f'Looking for editor "{ed}"')
+            logger.debug(f'Looking for editor "{ed}"')
             if not editor is None:
                 break
             editor = shutil.which(ed)
@@ -36,9 +41,9 @@ class Edit(Command):
             raise RuntimeError('Could not find valid editor! '
                     'Please set environment variable "DEVENV_EDITOR" or "EDITOR"')
 
-        logging.info(f'Using editor "{editor}"')
+        logger.info(f'Using editor "{editor}"')
         return editor
 
     def run(self):
         editor = self.get_default_editor()
-        os.system('{editor} {self.args.config_file}')
+        os.system(f'{editor} {self.args.config_file}')

@@ -15,6 +15,8 @@ import devenv.generators as generators
 from devenv.configuration import check_config_file, merge_config_file
 from devenv.defaults import configs, aliases
 
+logger = logging.getLogger('devenv.main')
+
 def main():
     parser = argparse.ArgumentParser(
             description='Configure development environment based on predetermined configurations',
@@ -33,20 +35,16 @@ def main():
         print(defaults.extra_help)
         sys.exit(0)
 
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    devenv.configuration.set_logging_attrs(args, logger)
 
-    if args.vverbose or args.debug:
-        logging.basicConfig(level=logging.DEBUG)
-
-    logging.debug(f'Got args: {args}')
+    logger.debug(f'Got args: {args}')
 
     check_config_file(args)
 
     merge_config_file(configs, aliases, args)
 
     for k, v in aliases.items():
-        logging.debug(f'Adding alias "{k}" = "{v}"')
+        logger.debug(f'Adding alias "{k}" = "{v}"')
         configs[k] = configs[v]
 
     devenv.subcommands.handle_subcommand(args, configs)

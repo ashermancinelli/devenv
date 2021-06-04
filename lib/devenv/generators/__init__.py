@@ -2,6 +2,7 @@ from typing import Dict
 from abc import *
 import logging
 
+logger = logging.getLogger('devenv.generators')
 
 class CommandGenerator(ABC):
     @abstractmethod
@@ -82,5 +83,6 @@ class BashGenerator(CommandGenerator):
         return cmds
 
 def generate_script(args: str, config: Dict[str, str]) -> str:
+    devenv.configuration.set_logging_attrs(args, logger)
     generator = BashGenerator(args=args)
     return generator.generate(config)
