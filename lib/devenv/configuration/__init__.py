@@ -14,10 +14,9 @@ def set_logging_attrs(args, logger) -> None:
     if args.verbose:
         logger.setLevel(logging.INFO)
 
-    if args.vverbose or args.debug:
+    if args.debug:
         logger.setLevel(logging.DEBUG)
         logger.debug('Debug output enabled')
-
 
 def apply_shorthand_commands(argv: List[str]) -> None:
     if len(argv) < 2:
