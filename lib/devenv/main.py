@@ -50,15 +50,3 @@ def main():
 
     devenv.subcommands.handle_subcommand(args, configs)
     return 0
-
-    # Otherwise, print out the command
-    logging.info('Building development environment command')
-    # cmd = cfg_to_cmd(configs[args.name])
-    cmd = generators.generate_script(args, configs[args.name])
-
-    logging.info(f'Launching environment with command: \n%s' % cmd.strip())
-
-    if not args.debug:
-        logging.info('Running command in subprocess')
-        os.system(cmd)
-
