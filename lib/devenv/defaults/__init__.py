@@ -68,5 +68,12 @@ configs = {
             },
         }
 
+command_shorthands = {
+        'ap': 'apply',
+        'du': 'dump',
+        'ls': 'list',
+        'ed': 'edit',
+        }
+
 # Default aliases for configurations
 aliases = dict()

@@ -26,6 +26,7 @@ def main():
     devenv.configuration.add_default_parser_options(parser)
     subparsers = parser.add_subparsers(help='sub-command help', dest='command')
     devenv.subcommands.add_subparsers(subparsers)
+    devenv.configuration.apply_shorthand_commands(sys.argv)
     args = parser.parse_args()
 
     if args.full_help:

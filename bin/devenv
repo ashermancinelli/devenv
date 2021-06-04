@@ -23,9 +23,9 @@ from __future__ import print_function
 import os
 import sys
 
-if sys.version_info[0] < 3:
+if sys.version_info[:2] < (3, 3):
     v_info = sys.version_info[:3]
-    sys.exit("Devenv requires Python 3 or higher."
+    sys.exit("Devenv requires Python 3.3 or higher."
              "This is Python %d.%d.%d." % v_info)
 
 # Find devenv's location and its prefix.

@@ -2,8 +2,19 @@ import os
 import logging
 import yaml
 import argparse
+import sys
+import devenv
+from typing import List
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
+
+def apply_shorthand_commands(argv: List[str]) -> None:
+    if len(argv) < 2:
+        return
+
+    if argv[1] in devenv.defaults.command_shorthands.keys():
+        argv[1] = devenv.defaults.command_shorthands[argv[1]]
+
 
 def check_config_file(args) -> None:
     # If the config file doesn't exist, check the default locations until we find one that does
@@ -21,12 +32,12 @@ def check_config_file(args) -> None:
     # let's just give up.
     if not os.path.exists(args.config_file):
         raise ValueError(f'Configuration file {args.config_file.strip()} does not exist!'
-                ' Please pass `--config` flag or create either ~/.devenv.yaml or ~/.shell/devenv.yaml.')
+                ' Please pass `--config` flag or create config file ~/.devenv.yaml.')
 
 def merge_config_file(configs, aliases, args) -> None:
     # Add the configs from the config file to our internal dict of configs
     with open(args.config_file, 'r') as f:
-        new_values = yaml.load(f)
+        new_values = yaml.full_load(f)
         logging.debug(f'Got the following values from config file:\n{pp.pformat(new_values)}')
 
         if 'configs' in new_values.keys():
