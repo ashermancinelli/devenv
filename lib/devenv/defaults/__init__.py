@@ -33,6 +33,8 @@ command_shorthands = {
         'du': 'dump',
         'ls': 'list',
         'ed': 'edit',
+        'e': 'edit',
+        'st': 'status',
         }
 
 # Default aliases for configurations

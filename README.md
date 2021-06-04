@@ -7,12 +7,12 @@ To get started, just add ./bin to your PATH.
 ```console
 $ devenv help
 usage: devenv [--config-file CONFIG_FILE] [--help] [--verbose] [--debug]
-              {help,edit,dump,list,apply,version} ...
+              {help,edit,dump,list,apply,version,status} ...
 
 Configure development environment based on predetermined configurations
 
 positional arguments:
-  {help,edit,dump,list,apply,version}
+  {help,edit,dump,list,apply,version,status}
                         sub-command --help
 
 optional arguments:
@@ -84,7 +84,22 @@ optional arguments:
 
 Help for subcommand "version"
 ------------------------------
-usage: devenv version
+usage: devenv version [--verbose] [--debug]
+
+optional arguments:
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand "status"
+------------------------------
+usage: devenv status [-h] [--verbose] [--debug]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
 
 --------------------------------------------------------------------------------
 ```
