@@ -1,0 +1,64 @@
+import yaml
+import sys
+import argparse
+import os
+from typing import Dict
+import logging
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
+import devenv
+import devenv.subcommands
+import devenv.configuration
+import devenv.defaults as defaults
+import devenv.generators as generators
+from devenv.configuration import check_config_file, merge_config_file
+from devenv.defaults import configs, aliases
+
+def main():
+    parser = argparse.ArgumentParser(
+            description='Configure development environment based on predetermined configurations',
+            formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--config-file', '-c', type=str,
+            help=f'Path to configuration file. Defaults to {defaults.config_locations[0]}',
+            default=os.path.expanduser(defaults.config_locations[0]))
+    parser.add_argument('--full-help', help='Print extra long help information', action='store_true')
+    devenv.configuration.add_default_parser_options(parser)
+    subparsers = parser.add_subparsers(help='sub-command help', dest='command')
+    devenv.subcommands.add_subparsers(subparsers)
+    args = parser.parse_args()
+
+    if args.full_help:
+        print(defaults.extra_help)
+        sys.exit(0)
+
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+
+    if args.vverbose or args.debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    logging.debug(f'Got args: {args}')
+
+    check_config_file(args)
+
+    merge_config_file(configs, aliases, args)
+
+    for k, v in aliases.items():
+        logging.debug(f'Adding alias "{k}" = "{v}"')
+        configs[k] = configs[v]
+
+    devenv.subcommands.handle_subcommand(args, configs)
+    return 0
+
+    # Otherwise, print out the command
+    logging.info('Building development environment command')
+    # cmd = cfg_to_cmd(configs[args.name])
+    cmd = generators.generate_script(args, configs[args.name])
+
+    logging.info(f'Launching environment with command: \n%s' % cmd.strip())
+
+    if not args.debug:
+        logging.info('Running command in subprocess')
+        os.system(cmd)
+

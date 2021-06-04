@@ -1,0 +1,48 @@
+import os
+import logging
+import yaml
+import argparse
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
+def check_config_file(args) -> None:
+    # If the config file doesn't exist, check the default locations until we find one that does
+    config_file = os.path.abspath(args.config_file)
+    default_loc_i = 0
+    while not os.path.exists(config_file):
+        logging.debug(f"{__file__} Couldn't find file {config_file}")
+        config_file = os.path.expanduser(defaults.config_locations[default_loc_i])
+        logging.debug(f'Checking {config_file}')
+        default_loc_i += 1
+    args.config_file = config_file
+
+    logging.debug(f'Using config file {args.config_file}')
+    # If we still don't have a valid config file after checking default locations,
+    # let's just give up.
+    if not os.path.exists(args.config_file):
+        raise ValueError(f'Configuration file {args.config_file.strip()} does not exist!'
+                ' Please pass `--config` flag or create either ~/.devenv.yaml or ~/.shell/devenv.yaml.')
+
+def merge_config_file(configs, aliases, args) -> None:
+    # Add the configs from the config file to our internal dict of configs
+    with open(args.config_file, 'r') as f:
+        new_values = yaml.load(f)
+        logging.debug(f'Got the following values from config file:\n{pp.pformat(new_values)}')
+
+        if 'configs' in new_values.keys():
+            logging.info('Updating configurations from config file')
+            configs.update(new_values['configs'])
+
+        if 'aliases' in new_values.keys():
+            logging.info('Updating aliases from config file')
+            aliases.update(new_values['aliases'])
+
+    logging.debug('Checking for conflicts between aliases and configs')
+    if len(set(configs.keys()).intersection(aliases.keys())) > 0:
+        raise ValueError('Got conflict between configuration names and aliases!')
+
+def add_default_parser_options(parser):
+    parser.add_argument('--verbose', '-v', help='Verbose debugging information', action='store_true')
+    parser.add_argument('--vverbose', '-vv', help='Extra verbose debugging information', action='store_true')
+    parser.add_argument('--debug', '-L', help='Extra verbose debugging information', action='store_true')
+    return parser
