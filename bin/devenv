@@ -40,4 +40,4 @@ import devenv.main
 
 # Once we've set up the system path, run the spack main method
 if __name__ == "__main__":
-    sys.exit(devenv.main.main())
+    sys.exit(devenv.main.main(devenv_prefix))

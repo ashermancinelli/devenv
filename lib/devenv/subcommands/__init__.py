@@ -1,7 +1,7 @@
 import logging
 import devenv
-import devenv.subcommands
 import devenv.subcommands.dump
+import devenv.subcommands.version
 import devenv.subcommands.edit
 import devenv.subcommands.list
 import devenv.subcommands.apply
@@ -13,19 +13,22 @@ def add_subparsers(subparsers) -> None:
     devenv.subcommands.dump.add_subparser(subparsers)
     devenv.subcommands.list.add_subparser(subparsers)
     devenv.subcommands.apply.add_subparser(subparsers)
+    devenv.subcommands.version.add_subparser(subparsers)
 
 def handle_subcommand(args, configs) -> None:
 
+    command_mapping = {
+            'list': devenv.subcommands.list.List,
+            'apply': devenv.subcommands.apply.Apply,
+            'dump': devenv.subcommands.dump.Dump,
+            'edit': devenv.subcommands.edit.Edit,
+            'version': devenv.subcommands.version.Version,
+            }
+
     devenv.configuration.set_logging_attrs(args, logger)
+
     logger.debug(f'Got command "{args.command}"')
-    if args.command == 'list':
-        cmd = devenv.subcommands.list.List(args, configs)
-    elif args.command == 'dump':
-        cmd = devenv.subcommands.dump.Dump(args, configs)
-    elif args.command == 'apply':
-        cmd = devenv.subcommands.apply.Apply(args, configs)
-    elif args.command == 'edit':
-        cmd = devenv.subcommands.edit.Edit(args, configs)
+    cmd = command_mapping[args.command](args, configs)
 
     logger.debug('Running command')
     cmd.run()

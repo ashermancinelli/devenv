@@ -27,6 +27,7 @@ class _HelpAction(argparse._HelpAction):
         subparsers_actions = [
             action for action in parser._actions
             if isinstance(action, argparse._SubParsersAction)]
+
         # there will probably only be one subparser_action,
         # but better save than sorry
         for subparsers_action in subparsers_actions:
@@ -40,7 +41,7 @@ class _HelpAction(argparse._HelpAction):
 
         parser.exit()
 
-def main():
+def main(devenv_prefix):
     parser = argparse.ArgumentParser(
             description='Configure development environment based on predetermined configurations',
             formatter_class=argparse.RawTextHelpFormatter,
@@ -55,17 +56,8 @@ def main():
     devenv.configuration.apply_shorthand_commands(sys.argv)
     args = parser.parse_args()
 
-    # retrieve subparsers from parser
-    subparsers_actions = [
-        action for action in parser._actions
-        if isinstance(action, argparse._SubParsersAction)]
-    # there will probably only be one subparser_action,
-    # but better safe than sorry
-    for subparsers_action in subparsers_actions:
-        # get all subparsers and print help
-        for choice, subparser in subparsers_action.choices.items():
-            print("Subparser '{}'".format(choice))
-            print(subparser.format_help())
+    # Let the reset of devenv know where it's installed
+    args.prefix = devenv_prefix
 
     devenv.configuration.set_logging_attrs(args, logger)
 
@@ -80,4 +72,5 @@ def main():
         configs[k] = configs[v]
 
     devenv.subcommands.handle_subcommand(args, configs)
+
     return 0
