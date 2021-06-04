@@ -9,7 +9,7 @@ logger = logging.getLogger('devenv.subcommands.edit')
 version_parser = None
 
 def add_subparser(subparsers):
-    version_parser = subparsers.add_parser("version")
+    version_parser = subparsers.add_parser("version", add_help=False)
 
 class Version(Command):
     def __init__(self, args, configs):
