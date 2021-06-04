@@ -13,13 +13,13 @@ def add_subparser(subparsers):
     devenv.utils.add_default_parser_options(version_parser)
 
 class Version(Command):
-    def __init__(self, args, configs):
-        super().__init__(args, configs)
+    def __init__(self, args, config):
+        super().__init__(args, config)
         devenv.utils.set_logging_attrs(args, logger)
 
     def run(self):
         label = subprocess.check_output(["git", "describe", "--tags"],
-                cwd=self.args.prefix).strip().decode()
+                cwd=self.config['definitions']['devenv']).strip().decode()
         logger.debug(f'Got description "{label}" from "git describe --tags"')
         version = f'devenv {label}'
         print(version)

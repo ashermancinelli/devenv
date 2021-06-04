@@ -3,8 +3,18 @@ import yaml
 from typing import List, Dict, Optional
 import os
 import logging
+import devenv
 
 logger = logging.getLogger('devenv.utils')
+
+def setup_all_loggers(args: argparse.Namespace):
+    set_logging_attrs(args, devenv.utils.logger)
+    set_logging_attrs(args, devenv.subcommands.apply.logger)
+    set_logging_attrs(args, devenv.subcommands.describe.logger)
+    set_logging_attrs(args, devenv.subcommands.edit.logger)
+    set_logging_attrs(args, devenv.subcommands.list.logger)
+    set_logging_attrs(args, devenv.subcommands.status.logger)
+    set_logging_attrs(args, devenv.subcommands.version.logger)
 
 def interpolate(string, devinitions: Dict[str, str]):
     '''If "$key" exists in string, replace "$key" with values[key]'''

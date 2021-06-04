@@ -48,19 +48,14 @@ def main(devenv_prefix):
     # Create handle for registering other subparsers
     subparsers = parser.add_subparsers(help='sub-command --help', dest='command')
     help_parser = subparsers.add_parser("help", add_help=False)
+    devenv.utils.add_default_parser_options(help_parser)
 
     # Add all subcommands
     devenv.subcommands.add_subparsers(subparsers)
 
     args = parser.parse_args()
 
-    devenv.utils.set_logging_attrs(args, devenv.utils.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.apply.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.describe.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.edit.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.list.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.status.logger)
-    devenv.utils.set_logging_attrs(args, devenv.subcommands.version.logger)
+    devenv.utils.setup_all_loggers(args)
 
     if args.verbose:
         args.verbose = True
@@ -91,10 +86,6 @@ def main(devenv_prefix):
         sys.exit(0)
 
     logger.debug(f'Got args: {args}')
-
-    for k, v in devenv_configuration['aliases'].items():
-        logger.debug(f'Adding alias "{k}" = "{v}"')
-        devenv_configuration['environments'][k] = devenv_configuration['environments'][v]
 
     devenv.subcommands.handle_subcommand(args, devenv_configuration)
 

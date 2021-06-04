@@ -22,9 +22,17 @@ class Describe(Command):
         devenv.utils.set_logging_attrs(self.args, logger)
 
     def run(self):
+
         if not self.args.name is None:
-            logger.info('Dumping environment "{self.args.name}"')
+
+            # Check for aliases
+            if self.args.name in self.config['aliases'].keys():
+                logger.debug(f'Using alias "{self.args.name}" = "{self.config["aliases"][self.args.name]}"')
+                self.args.name = self.config['aliases'][self.args.name]
+
+            logger.info('Describing environment "{self.args.name}"')
             pp.pprint(self.config['environments'][self.args.name])
+
         else:
-            logger.info('Dumping all environments')
+            logger.info('Describing all environments')
             pp.pprint(self.config)
