@@ -36,5 +36,5 @@ class Apply(Command):
         if self.args.debug:
             print(cmd)
         else:
-            logger.info('Running command for environment {self.args.name}')
+            logger.info(f'Running command for environment {self.args.name}')
             os.system(cmd)
