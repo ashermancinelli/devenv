@@ -21,6 +21,8 @@ class Update(Command):
         super().__init__(args, config)
 
     def run(self):
+        logger.warning('Update command is still in development')
+        logger.warning('Dont use if you have work in your devenv working tree!')
         version_info: Dict[str, str] = Version(self.args, self.config).run(do_print=False)
 
         if self.args.debug or self.args.verbose:
@@ -50,7 +52,7 @@ class Update(Command):
             subprocess.check_output(['git', 'stash', 'save', '"Devenv automated update"'],
                     cwd=self.config['definitions']['devenv'])
             logger.debug('Updating to newest master')
-            subprocess.check_output(['git', 'checkout', 'origin/master'],
+            subprocess.check_output(['git', 'pull', 'origin', 'master'],
                     cwd=self.config['definitions']['devenv'])
 
 
