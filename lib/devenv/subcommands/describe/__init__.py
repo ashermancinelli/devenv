@@ -34,5 +34,5 @@ class Describe(Command):
             pp.pprint(self.config['environments'][self.args.name])
 
         else:
-            logger.info('Describing all environments')
+            logger.info('Describing entire configuration')
             pp.pprint(self.config)

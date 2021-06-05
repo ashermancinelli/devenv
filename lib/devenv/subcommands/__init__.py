@@ -1,6 +1,7 @@
 import logging
 import devenv
 import devenv.subcommands.describe
+import devenv.subcommands.update
 import devenv.subcommands.status
 import devenv.subcommands.version
 import devenv.subcommands.edit
@@ -16,8 +17,9 @@ def add_subparsers(subparsers) -> None:
     devenv.subcommands.version.add_subparser(subparsers)
     devenv.subcommands.status.add_subparser(subparsers)
     devenv.subcommands.describe.add_subparser(subparsers)
+    devenv.subcommands.update.add_subparser(subparsers)
 
-def handle_subcommand(args, configs) -> None:
+def handle_subcommand(args, config) -> None:
 
     command_mapping = {
             'list': devenv.subcommands.list.List,
@@ -26,12 +28,13 @@ def handle_subcommand(args, configs) -> None:
             'version': devenv.subcommands.version.Version,
             'status': devenv.subcommands.status.Status,
             'describe': devenv.subcommands.describe.Describe,
+            'update': devenv.subcommands.update.Update,
             }
 
     devenv.utils.set_logging_attrs(args, logger)
 
     logger.debug(f'Got command "{args.command}"')
-    cmd = command_mapping[args.command](args, configs)
+    cmd = command_mapping[args.command](args, config)
 
     logger.debug('Running command')
     cmd.run()

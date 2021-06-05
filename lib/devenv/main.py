@@ -4,6 +4,7 @@ import argparse
 import os
 from typing import Dict
 import logging
+logging.basicConfig(level=logging.INFO)
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -13,7 +14,6 @@ import devenv.utils
 import devenv.generators as generators
 
 logger = logging.getLogger('devenv.main')
-# logger.setLevel(logging.DEBUG)
 
 def main(devenv_prefix):
 

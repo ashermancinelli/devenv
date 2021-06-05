@@ -12,11 +12,33 @@ else:
 
 logger = logging.getLogger('devenv.utils')
 
+class DotDict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+def make_version_info(git_description):
+    return devenv.utils.DotDict({
+        'label': git_description,
+        'tag': git_description.split('-')[0],
+        'revision': git_description.split('-')[1],
+        'commit': git_description.split('-')[2][1:],
+        })
+
 def get_devenv_variables(config, args) -> Dict[str, str]:
     env = dict()
     env['DEVENV_LAYERS'] = int(os.environ.get('DEVENV_LAYERS', 0)) + 1
     env['DEVENV_ENV_NAME'] = args.name
     return env
+
+def set_logging_attrs(args, logger) -> None:
+    if args.verbose:
+        logger.setLevel(logging.INFO)
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+        logger.debug('Debug output enabled')
 
 def setup_all_loggers(args: argparse.Namespace):
     set_logging_attrs(args, devenv.utils.logger)
@@ -26,6 +48,7 @@ def setup_all_loggers(args: argparse.Namespace):
     set_logging_attrs(args, devenv.subcommands.list.logger)
     set_logging_attrs(args, devenv.subcommands.status.logger)
     set_logging_attrs(args, devenv.subcommands.version.logger)
+    set_logging_attrs(args, devenv.subcommands.update.logger)
     set_logging_attrs(args, devenv.generators.logger)
 
 def interpolate(string, devinitions: Dict[str, str]):
@@ -82,14 +105,6 @@ class _HelpAction(argparse._HelpAction):
     def __call__(self, parser, namespace, values, option_string=None):
         print(create_help(parser))
         parser.exit()
-
-def set_logging_attrs(args, logger) -> None:
-    if args.verbose:
-        logger.setLevel(logging.INFO)
-
-    if args.debug:
-        logger.setLevel(logging.DEBUG)
-        logger.debug('Debug output enabled')
 
 
 def check_config_file(args) -> None:
