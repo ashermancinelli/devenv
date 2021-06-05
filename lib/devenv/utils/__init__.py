@@ -5,7 +5,18 @@ import os
 import logging
 import devenv
 
+if int(yaml.__version__.split('.')[0]) < 5:
+    yaml_load_fn = yaml.load
+else:
+    yaml_load_fn = yaml.full_load
+
 logger = logging.getLogger('devenv.utils')
+
+def get_devenv_variables(config, args) -> Dict[str, str]:
+    env = dict()
+    env['DEVENV_LAYERS'] = int(os.environ.get('DEVENV_LAYERS', 0)) + 1
+    env['DEVENV_ENV_NAME'] = args.name
+    return env
 
 def setup_all_loggers(args: argparse.Namespace):
     set_logging_attrs(args, devenv.utils.logger)
@@ -15,6 +26,7 @@ def setup_all_loggers(args: argparse.Namespace):
     set_logging_attrs(args, devenv.subcommands.list.logger)
     set_logging_attrs(args, devenv.subcommands.status.logger)
     set_logging_attrs(args, devenv.subcommands.version.logger)
+    set_logging_attrs(args, devenv.generators.logger)
 
 def interpolate(string, devinitions: Dict[str, str]):
     '''If "$key" exists in string, replace "$key" with values[key]'''
@@ -40,7 +52,7 @@ def load_config_file(configuration: Dict[str, str], path: str):
                 line = line.replace('\n', '')
                 interpolate(line, configuration['definitions'])
                 contents += line + '\n'
-        config = yaml.full_load(contents)
+        config = yaml_load_fn(contents)
         configuration.update(config['devenv'])
 
 
@@ -103,7 +115,7 @@ def merge_config_file(config: Dict[str, str], args: argparse.Namespace) -> None:
 
     # Add the configs from the config file to our internal dict of configs
     with open(args.config_file, 'r') as f:
-        new_values = yaml.full_load(f)['devenv']
+        new_values = yaml_load_fn(f)['devenv']
         logging.debug(f'Got the following values from config file:\n{pp.pformat(new_values)}')
 
         if 'environments' in new_values.keys():

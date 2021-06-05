@@ -1,7 +1,7 @@
 from typing import Dict
 from abc import *
 import devenv
-import devenv.defaults
+import devenv.utils
 import logging
 
 logger = logging.getLogger('devenv.generators')
@@ -19,7 +19,7 @@ class BashGenerator(CommandGenerator):
 
     def add_devenv_variables(self, config) -> None:
         logger.debug('Adding devenv variables')
-        for key, value in devenv.defaults.get_devenv_variables(config, self.args).items():
+        for key, value in devenv.utils.get_devenv_variables(config, self.args).items():
             logger.debug(f'Exporting "{key}" as "{value}"')
             config['commands'].insert(0, f'export {key}={value}')
 
@@ -55,6 +55,8 @@ class BashGenerator(CommandGenerator):
             for c in config['commands']:
                 logger.debug(f'Adding "{c}" to command string')
                 cmds += '\n' + c
+
+        cmds += '\n'
         return cmds
 
     def add_modules(self, config) -> str:
@@ -70,9 +72,9 @@ class BashGenerator(CommandGenerator):
         cmds = ''
         if 'launch-command' in config.keys():
             logger.info(f'Adding launch command "{config["launch-command"]}" to command string')
-            cmds += '\n' + config['launch-command']
+            cmds += '\n' + config['launch-command'] + '\n'
         else:
-            cmds += '\nbash'
+            cmds += '\nbash\n'
 
         return cmds
 
@@ -82,16 +84,23 @@ class BashGenerator(CommandGenerator):
         logger.info('Building command from configuration')
         cmds = ''
 
+        # If verbose, show all shell commands
+        if self.args.verbose or self.args.debug:
+            cmds += 'set -x\n'
+
         self.add_exported_variables(config)
         self.add_devenv_variables(config)
 
-        cmds += self.add_commands(config)
         cmds += self.add_modules(config)
+        cmds += self.add_commands(config)
+
+        if self.args.verbose or self.args.debug:
+            cmds += 'set +x\n'
+
         cmds += self.add_launch_command(config)
 
         return cmds
 
 def generate_script(args: str, config: Dict[str, str]) -> str:
-    devenv.configuration.set_logging_attrs(args, logger)
     generator = BashGenerator(args=args)
     return generator.generate(config)

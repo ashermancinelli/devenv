@@ -28,8 +28,8 @@ class Apply(Command):
         logging.info(f'Creating commands for environment {self.args.name}')
 
         if self.args.name in self.config['aliases'].keys():
-            logger.debug(f'Using alias "{self.args.name}" = "{config["aliases"][self.args.name]}"')
-            self.args.name = config['aliases'][self.args.name]
+            logger.debug(f'Using alias "{self.args.name}" = "{self.config["aliases"][self.args.name]}"')
+            self.args.name = self.config['aliases'][self.args.name]
 
         cmd = devenv.generators.generate_script(self.args, self.config['environments'][self.args.name])
 

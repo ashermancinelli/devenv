@@ -5,13 +5,6 @@ import devenv.configuration
 
 logger = logging.getLogger('devenv.defaults')
 
-def get_devenv_variables(config, args) -> Dict[str, str]:
-    devenv.configuration.set_logging_attrs(args, logger)
-    env = dict()
-    env['DEVENV_LAYERS'] = int(os.environ.get('DEVENV_LAYERS', 0)) + 1
-    env['DEVENV_ENV_NAME'] = args.name
-    return env
-
 # Default locations for config files
 config_locations = [
         '~/.devenv.yaml',
