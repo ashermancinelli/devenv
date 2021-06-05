@@ -6,44 +6,35 @@ To get started, just add ./bin to your PATH.
 
 ```console
 $ devenv help
-usage: devenv [--config-file CONFIG_FILE] [--help] [--verbose] [--debug]
-              {help,edit,dump,list,apply,version,status} ...
+usage: devenv [--config-file CONFIG_FILE] [--help]
+              {help,edit,list,apply,version,status,describe,update} ...
 
 Configure development environment based on predetermined configurations
 
 positional arguments:
-  {help,edit,dump,list,apply,version,status}
+  {help,edit,list,apply,version,status,describe,update}
                         sub-command --help
 
 optional arguments:
   --config-file CONFIG_FILE, -c CONFIG_FILE
                         Path to configuration file. Defaults to ~/.devenv.yaml
   --help, -h            View all program options
-  --verbose, -v         Verbose debugging information
-  --debug, -L           Extra verbose debugging information
 
 --------------------------------------------------------------------------------
 
 Help for subcommand "help"
 ------------------------------
-usage: devenv help
+usage: devenv help [--verbose] [--debug]
+
+optional arguments:
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
 
 --------------------------------------------------------------------------------
 
 Help for subcommand "edit"
 ------------------------------
 usage: devenv edit [-h] [--verbose] [--debug]
-
-optional arguments:
-  -h, --help     show this help message and exit
-  --verbose, -v  Verbose debugging information
-  --debug, -L    Extra verbose debugging information
-
---------------------------------------------------------------------------------
-
-Help for subcommand "dump"
-------------------------------
-usage: devenv dump [-h] [--verbose] [--debug]
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -102,6 +93,32 @@ optional arguments:
   --debug, -L    Extra verbose debugging information
 
 --------------------------------------------------------------------------------
+
+Help for subcommand "describe"
+------------------------------
+usage: devenv describe [-h] [--verbose] [--debug] [name]
+
+positional arguments:
+  name           Name of environment to be described. If not supplied, the
+                 entire configuration will be described.
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
+
+Help for subcommand "update"
+------------------------------
+usage: devenv update [-h] [--verbose] [--debug]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --verbose, -v  Verbose debugging information
+  --debug, -L    Extra verbose debugging information
+
+--------------------------------------------------------------------------------
 ```
 
 ### Configuration Format
@@ -110,14 +127,17 @@ The configuration files must have the following form:
 
 ```yaml
 # ~/.devenv.yaml
-configs:
-    config-name:
-        commands: []
-        modules: []
-        launch-command: ''
+devenv:
+  environments:
+      environment-name:
+          commands:
+            - cd ~/myproject
+          modules:
+            - gcc/7.5.0
+          launch-command: bash
 
-aliases:
-    alias1: value1
+  aliases:
+      alias1: value1
 ```
 
 The commands are built in the following order:
