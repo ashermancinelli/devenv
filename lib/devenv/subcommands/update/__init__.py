@@ -33,7 +33,7 @@ class Update(Command):
                 cwd=self.config['definitions']['devenv'])
 
         logger.debug('Checking for new commits to master')
-        git_description = subprocess.check_output(['git', 'describe', '--tags', 'master'],
+        git_description = subprocess.check_output(['git', 'describe', '--tags', 'origin/master'],
                 cwd=self.config['definitions']['devenv']).strip().decode()
 
         new_version_info = devenv.utils.make_version_info(git_description)
@@ -46,8 +46,11 @@ class Update(Command):
         if version_info.commit == new_version_info.commit:
             print('Nothing to do!')
         else:
+            logger.debug('Stashing current working state')
+            subprocess.check_output(['git', 'stash', 'save', '"Devenv automated update"'],
+                    cwd=self.config['definitions']['devenv'])
             logger.debug('Updating to newest master')
-            subprocess.check_output(['git', 'pull', 'origin', 'master', '--rebase'],
+            subprocess.check_output(['git', 'checkout', 'origin/master'],
                     cwd=self.config['definitions']['devenv'])
 
 
