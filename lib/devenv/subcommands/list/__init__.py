@@ -2,7 +2,7 @@ import logging
 import devenv.utils
 from devenv.subcommands.base_command import Command
 
-logger = logging.getLogger('devenv.subcommands.edit')
+logger = logging.getLogger('devenv.subcommands.list')
 
 list_parser = None
 
