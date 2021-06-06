@@ -1,5 +1,6 @@
 from typing import Dict
 import logging
+import json
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 from devenv.subcommands.base_command import Command
@@ -30,9 +31,9 @@ class Describe(Command):
                 logger.debug(f'Using alias "{self.args.name}" = "{self.config["aliases"][self.args.name]}"')
                 self.args.name = self.config['aliases'][self.args.name]
 
-            logger.info('Describing environment "{self.args.name}"')
-            pp.pprint(self.config['environments'][self.args.name])
+            logger.debug(f'Describing environment "{self.args.name}"')
+            print(json.dumps(self.config['environments'][self.args.name], indent=4))
 
         else:
-            logger.info('Describing entire configuration')
-            pp.pprint(self.config)
+            logger.debug('Describing entire configuration')
+            print(json.dumps(self.config, indent=4))

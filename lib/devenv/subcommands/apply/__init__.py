@@ -25,7 +25,7 @@ class Apply(Command):
         devenv.utils.set_logging_attrs(args, logger)
 
     def run(self):
-        logging.info(f'Creating commands for environment {self.args.name}')
+        logging.debug(f'Creating commands for environment {self.args.name}')
 
         if self.args.name in self.config['aliases'].keys():
             logger.debug(f'Using alias "{self.args.name}" = "{self.config["aliases"][self.args.name]}"')
@@ -36,5 +36,5 @@ class Apply(Command):
         if self.args.debug:
             print(cmd)
         else:
-            logger.info(f'Running command for environment {self.args.name}')
+            logger.debug(f'Running command for environment {self.args.name}')
             os.system(cmd)

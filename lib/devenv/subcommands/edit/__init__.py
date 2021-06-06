@@ -41,7 +41,7 @@ class Edit(Command):
             raise RuntimeError('Could not find valid editor! '
                     'Please set environment variable "DEVENV_EDITOR" or "EDITOR"')
 
-        logger.info(f'Using editor "{editor}"')
+        logger.debug(f'Using editor "{editor}"')
         return editor
 
     def run(self):
