@@ -18,12 +18,21 @@ class DotDict(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
-def make_version_info(git_description):
+def make_version_info(git_description: str) -> Dict[str, str]:
+    if '-' in git_description:
+        return devenv.utils.DotDict({
+            'label': git_description,
+            'tag': git_description.split('-')[0],
+            'revision': git_description.split('-')[1],
+            'commit': git_description.split('-')[2][1:],
+            })
+
+    # If '-' is not in the git description, we're working directly on a tagged branch
     return devenv.utils.DotDict({
         'label': git_description,
-        'tag': git_description.split('-')[0],
-        'revision': git_description.split('-')[1],
-        'commit': git_description.split('-')[2][1:],
+        'tag': git_description,
+        'revision': 0,
+        'commit': None
         })
 
 def get_devenv_variables(config, args) -> Dict[str, str]:

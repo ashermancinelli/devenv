@@ -23,9 +23,9 @@ class Version(Command):
     def run(self, do_print=True) -> Dict[str, str]:
         git_description = subprocess.check_output(["git", "describe", "--tags"],
                 cwd=self.config['definitions']['devenv']).strip().decode()
+        logger.debug(f'Got description "{git_description}" from "git describe --tags"')
 
         version_info = devenv.utils.make_version_info(git_description)
-        logger.debug(f'Got description "{version_info.label}" from "git describe --tags"')
 
         if do_print:
             if self.args.verbose or self.args.debug:
