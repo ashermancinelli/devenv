@@ -5,12 +5,14 @@ import os
 import logging
 import devenv
 
+logger = logging.getLogger('devenv.utils')
+
 if int(yaml.__version__.split('.')[0]) < 5:
+    logger.debug('Got PyYAML < 5.0')
     yaml_load_fn = yaml.load
 else:
+    logger.debug('Got PyYAML >= 5.0')
     yaml_load_fn = yaml.full_load
-
-logger = logging.getLogger('devenv.utils')
 
 class DotDict(dict):
     """dot.notation access to dictionary attributes"""
@@ -72,10 +74,12 @@ def interpolate(string, devinitions: Dict[str, str]):
 
     return interpolated
 
+# TODO: Expand error checking for config files
 def is_well_formed_config(config: Dict[str, str]) -> bool:
     keys = config.keys()
     if not 'devenv' in keys:
-        return false
+        return False
+    return True
 
 
 def load_config_file(configuration: Dict[str, str], path: str):
