@@ -72,8 +72,13 @@ def interpolate(string, devinitions: Dict[str, str]):
 
     return interpolated
 
-def load_config_file(configuration: Dict[str, str], path: str):
+def is_well_formed_config(config: Dict[str, str]) -> bool:
+    keys = config.keys()
+    if not 'devenv' in keys:
+        return false
 
+
+def load_config_file(configuration: Dict[str, str], path: str):
 
     interpolate(path, configuration['definitions'])
     if os.path.exists(path):
@@ -84,8 +89,15 @@ def load_config_file(configuration: Dict[str, str], path: str):
                 line = line.replace('\n', '')
                 interpolate(line, configuration['definitions'])
                 contents += line + '\n'
+
+        logger.debug('Got contents:\n%s' % contents)
         config = yaml_load_fn(contents)
-        configuration.update(config['devenv'])
+
+        if is_well_formed_config(config):
+            configuration.update(config['devenv'])
+        else:
+            logger.error('Configuration file %s is malformed! Default '
+                    'configuration will be dumped to this file.' % path)
 
 
 def create_help(parser) -> str:
